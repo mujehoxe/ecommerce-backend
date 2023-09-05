@@ -12,9 +12,11 @@ export class CategoryService {
     private readonly categoryRepository: Repository<Category>,
   ) {}
 
-  async createCategory(
-    createCategoryDto: CreateCategoryDto,
-  ): Promise<Category> {
+  async getAll(): Promise<Category[]> {
+    return this.categoryRepository.find({});
+  }
+
+  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
     const { name } = createCategoryDto;
     const category = this.categoryRepository.create({ name });
     return this.categoryRepository.save(category);
@@ -25,7 +27,7 @@ export class CategoryService {
       where: { name: categoryName },
     });
     if (!category) {
-      category = await this.createCategory({ name: categoryName });
+      category = await this.create({ name: categoryName });
     }
     return category;
   }
