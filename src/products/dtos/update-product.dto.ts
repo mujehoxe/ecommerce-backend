@@ -23,11 +23,10 @@ export class UpdateProductDto {
   quantity?: number;
 
   @IsOptional()
-  @IsString()
-  thumbnail?: string;
+  thumbnail?: Express.Multer.File;
 
   @IsOptional()
-  images?: string[];
+  images?: Express.Multer.File[];
 
   @IsOptional()
   @IsString()

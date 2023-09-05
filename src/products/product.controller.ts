@@ -2,13 +2,13 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Delete,
   Param,
   Body,
   NotFoundException,
   UploadedFiles,
   UseInterceptors,
+  Patch,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
@@ -16,7 +16,6 @@ import { CreateProductDto } from './dtos/create-product.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UpdateProductDto } from './dtos/update-product.dto';
 import { customStorage } from './customStorage';
-import { createHash } from 'crypto';
 
 @Controller('products')
 export class ProductController {
@@ -38,18 +37,32 @@ export class ProductController {
     @Body() createProductDto: CreateProductDto,
     @UploadedFiles() files: Record<string, Express.Multer.File[]>,
   ): Promise<Product> {
-    createProductDto.images = files['images'];
     createProductDto.thumbnail = files['thumbnail'][0];
+    createProductDto.images = files['images'];
 
     return await this.productService.create(createProductDto);
   }
 
-  @Put(':id')
-  async update(
+  @Patch(':id')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'images', maxCount: 4 },
+        { name: 'thumbnail', maxCount: 1 },
+      ],
+      { storage: customStorage },
+    ),
+  )
+  async updateProduct(
     @Param('id') id: number,
     @Body() updateProductDto: UpdateProductDto,
+    @UploadedFiles() files: Record<string, Express.Multer.File[]>,
   ): Promise<Product> {
     try {
+      files['thumbnail'] &&
+        (updateProductDto.thumbnail = files['thumbnail'][0]);
+      files['images'] && (updateProductDto.images = files['images']);
+
       return await this.productService.update(id, updateProductDto);
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -72,11 +85,5 @@ export class ProductController {
   @Get()
   getAllProducts(): Promise<Product[]> {
     return this.productService.getAllProducts();
-  }
-
-  createMd5Hash(file: Express.Multer.File): string {
-    const md5Hash = createHash('md5');
-    md5Hash.update(file.buffer); // Use the file's buffer to calculate the hash
-    return md5Hash.digest('hex'); // Return the hash in hexadecimal format
   }
 }
