@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryService } from '../categories/category.service';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
+import * as fs from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class ProductService {
@@ -16,40 +18,61 @@ export class ProductService {
   ) {}
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
-    const { categoryName, ...restProductData } = createProductDto;
-
-    const category =
-      await this.categoryService.findOrCreateCategory(categoryName);
+    const { thumbnail, images, categoryName, ...restProductData } =
+      createProductDto;
 
     const product = this.productRepository.create({
       ...restProductData,
-      category,
+      category: await this.categoryService.findOrCreateCategory(categoryName),
     });
 
-    categoryName &&
-      (product.category =
-        await this.categoryService.findOrCreateCategory(categoryName));
+    thumbnail && (product.thumbnail = join('./uploads/', thumbnail.filename));
+    console.log(thumbnail.filename);
 
-    return this.productRepository.save(product);
+    images &&
+      images.length > 0 &&
+      (product.images = images.map((image) =>
+        join('./uploads/', image.filename),
+      ));
+
+    await this.productRepository.save(product);
+
+    return product;
   }
 
-  async updateProduct(
+  async update(
     id: number,
     updateProductDto: UpdateProductDto,
   ): Promise<Product> {
+    const { thumbnail, images, ...restProductData } = updateProductDto;
+
     const product = await this.getProductById(id);
 
-    const { categoryName, ...restProductData } = updateProductDto;
+    if (thumbnail) {
+      const thumbnailPath = join('./uploads/', thumbnail.filename);
+      if (fs.existsSync(thumbnailPath)) {
+        fs.unlinkSync(thumbnailPath);
+      }
+      product.thumbnail = thumbnailPath;
+    }
 
-    Object.assign(product, {
-      ...restProductData,
-    });
+    if (images && images.length > 0) {
+      const existingImages = product.images || [];
+      existingImages.forEach((existingImage) => {
+        const imagePath = join('./uploads/', existingImage);
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+        }
+      });
 
-    categoryName &&
-      (product.category =
-        await this.categoryService.findOrCreateCategory(categoryName));
+      product.images = images.map((image) => image.filename);
+    }
 
-    return this.productRepository.save(product);
+    Object.assign(product, restProductData);
+
+    await this.productRepository.save(product);
+
+    return product;
   }
 
   async deleteProduct(id: number): Promise<void> {
