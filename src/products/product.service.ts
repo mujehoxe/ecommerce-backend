@@ -49,19 +49,18 @@ export class ProductService {
     const product = await this.getProductById(id);
 
     if (thumbnail) {
-      const thumbnailPath = join('./uploads/', thumbnail.filename);
-      if (fs.existsSync(thumbnailPath)) {
-        fs.unlinkSync(thumbnailPath);
+      if (fs.existsSync(product.thumbnail)) {
+        fs.unlinkSync(product.thumbnail);
       }
+      const thumbnailPath = join('./uploads/', thumbnail.filename);
       product.thumbnail = thumbnailPath;
     }
 
     if (images && images.length > 0) {
       const existingImages = product.images || [];
       existingImages.forEach((existingImage) => {
-        const imagePath = join('./uploads/', existingImage);
-        if (fs.existsSync(imagePath)) {
-          fs.unlinkSync(imagePath);
+        if (fs.existsSync(existingImage)) {
+          fs.unlinkSync(existingImage);
         }
       });
 
@@ -75,8 +74,25 @@ export class ProductService {
     return product;
   }
 
-  async deleteProduct(id: number): Promise<void> {
-    await this.productRepository.delete(id);
+  async delete(id: number): Promise<void> {
+    const product = await this.getProductById(id);
+
+    if (product.thumbnail) {
+      if (fs.existsSync(product.thumbnail)) {
+        fs.unlinkSync(product.thumbnail);
+      }
+    }
+
+    if (product.images && product.images.length > 0) {
+      product.images.forEach((image) => {
+        console.log(fs.existsSync(image));
+        if (fs.existsSync(image)) {
+          fs.unlinkSync(image);
+        }
+      });
+    }
+
+    await this.productRepository.remove(product);
   }
 
   async getProductById(id: number): Promise<Product | undefined> {

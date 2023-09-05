@@ -2,10 +2,7 @@ import { createHash } from 'crypto';
 import { diskStorage } from 'multer';
 
 export const customStorage = diskStorage({
-  destination: (req, file, cb) => {
-    const destinationFolder = './uploads'; // Adjust this as needed
-    cb(null, destinationFolder);
-  },
+  destination: 'uploads',
   filename: (req, file, cb) => {
     const originalFilename = file.originalname;
     const fileExtension = originalFilename.slice(

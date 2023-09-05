@@ -74,7 +74,7 @@ export class ProductController {
 
   @Delete(':id')
   deleteProduct(@Param('id') id: number): Promise<void> {
-    return this.productService.deleteProduct(id);
+    return this.productService.delete(id);
   }
 
   @Get(':id')
