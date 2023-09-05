@@ -56,7 +56,7 @@ export class ProductController {
       { storage: customStorage },
     ),
   )
-  async updateProduct(
+  async update(
     @Param('id') id: number,
     @Body() updateProductDto: UpdateProductDto,
     @UploadedFiles() files: Record<string, Express.Multer.File[]>,
@@ -76,22 +76,20 @@ export class ProductController {
   }
 
   @Delete(':id')
-  deleteProduct(@Param('id') id: number): Promise<void> {
+  delete(@Param('id') id: number): Promise<void> {
     return this.productService.delete(id);
   }
 
   @Get()
-  async getAllProducts(
+  async getAll(
     @Query('page') page: number = 1,
     @Query('pageSize') pageSize: number = 10,
   ): Promise<Product[]> {
-    return this.productService.getAllProducts(page, pageSize);
+    return this.productService.getAll(page, pageSize);
   }
 
   @Get('latest')
-  async getLatestProducts(
-    @Query('count') countQueryParam: string,
-  ): Promise<Product[]> {
+  async getLatest(@Query('count') countQueryParam: string): Promise<Product[]> {
     const count = parseInt(countQueryParam) || 10;
 
     if (count < 1 || count > 100) {
@@ -100,11 +98,11 @@ export class ProductController {
       );
     }
 
-    return this.productService.getLatestProducts(count);
+    return this.productService.getLatest(count);
   }
 
   @Get(':id')
-  getProductById(@Param('id') id: number): Promise<Product | undefined> {
-    return this.productService.getProductById(id);
+  getById(@Param('id') id: number): Promise<Product | undefined> {
+    return this.productService.getById(id);
   }
 }

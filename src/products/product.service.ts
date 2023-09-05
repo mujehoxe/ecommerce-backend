@@ -45,7 +45,7 @@ export class ProductService {
   ): Promise<Product> {
     const { thumbnail, images, ...restProductData } = updateProductDto;
 
-    const product = await this.getProductById(id);
+    const product = await this.getById(id);
 
     if (thumbnail) {
       if (fs.existsSync(product.thumbnail)) {
@@ -76,7 +76,7 @@ export class ProductService {
   }
 
   async delete(id: number): Promise<void> {
-    const product = await this.getProductById(id);
+    const product = await this.getById(id);
 
     if (product.thumbnail) {
       if (fs.existsSync(product.thumbnail)) {
@@ -95,7 +95,7 @@ export class ProductService {
     await this.productRepository.remove(product);
   }
 
-  async getProductById(id: number): Promise<Product | undefined> {
+  async getById(id: number): Promise<Product | undefined> {
     const product = await this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category')
@@ -109,7 +109,7 @@ export class ProductService {
     return product;
   }
 
-  async getAllProducts(page = 1, pageSize = 10): Promise<Product[]> {
+  async getAll(page = 1, pageSize = 10): Promise<Product[]> {
     const skip = (page - 1) * pageSize;
 
     return this.productRepository.find({
@@ -118,7 +118,7 @@ export class ProductService {
     });
   }
 
-  async getLatestProducts(count: number): Promise<Product[]> {
+  async getLatest(count: number): Promise<Product[]> {
     return this.productRepository.find({
       order: {
         createdAt: 'DESC',
