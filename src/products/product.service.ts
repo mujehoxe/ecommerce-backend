@@ -27,7 +27,6 @@ export class ProductService {
     });
 
     thumbnail && (product.thumbnail = join('./uploads/', thumbnail.filename));
-    console.log(thumbnail.filename);
 
     images &&
       images.length > 0 &&
@@ -87,7 +86,6 @@ export class ProductService {
 
     if (product.images && product.images.length > 0) {
       product.images.forEach((image) => {
-        console.log(fs.existsSync(image));
         if (fs.existsSync(image)) {
           fs.unlinkSync(image);
         }
@@ -111,7 +109,21 @@ export class ProductService {
     return product;
   }
 
-  async getAllProducts(): Promise<Product[]> {
-    return this.productRepository.find();
+  async getAllProducts(page = 1, pageSize = 10): Promise<Product[]> {
+    const skip = (page - 1) * pageSize;
+
+    return this.productRepository.find({
+      skip,
+      take: pageSize,
+    });
+  }
+
+  async getLatestProducts(count: number): Promise<Product[]> {
+    return this.productRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+      take: count,
+    });
   }
 }

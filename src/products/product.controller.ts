@@ -9,6 +9,9 @@ import {
   UploadedFiles,
   UseInterceptors,
   Patch,
+  Query,
+  ParseIntPipe,
+  BadRequestException,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
@@ -77,13 +80,31 @@ export class ProductController {
     return this.productService.delete(id);
   }
 
+  @Get()
+  async getAllProducts(
+    @Query('page') page: number = 1,
+    @Query('pageSize') pageSize: number = 10,
+  ): Promise<Product[]> {
+    return this.productService.getAllProducts(page, pageSize);
+  }
+
+  @Get('latest')
+  async getLatestProducts(
+    @Query('count') countQueryParam: string,
+  ): Promise<Product[]> {
+    const count = parseInt(countQueryParam) || 10;
+
+    if (count < 1 || count > 100) {
+      throw new BadRequestException(
+        'Invalid count parameter. Count must be between 1 and 100.',
+      );
+    }
+
+    return this.productService.getLatestProducts(count);
+  }
+
   @Get(':id')
   getProductById(@Param('id') id: number): Promise<Product | undefined> {
     return this.productService.getProductById(id);
-  }
-
-  @Get()
-  getAllProducts(): Promise<Product[]> {
-    return this.productService.getAllProducts();
   }
 }
