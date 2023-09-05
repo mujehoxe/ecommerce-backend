@@ -64,7 +64,9 @@ export class ProductService {
         }
       });
 
-      product.images = images.map((image) => image.filename);
+      product.images = images.map((image) =>
+        join('./uploads/', image.filename),
+      );
     }
 
     Object.assign(product, restProductData);
