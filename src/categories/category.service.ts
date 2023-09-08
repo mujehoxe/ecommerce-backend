@@ -22,12 +22,22 @@ export class CategoryService {
     return this.categoryRepository.save(category);
   }
 
-  async findOrCreateCategory(categoryName: string): Promise<Category> {
-    let category = await this.categoryRepository.findOne({
-      where: { name: categoryName },
+  async getById(id: number): Promise<Category> {
+    return await this.categoryRepository.findOne({
+      where: { id },
     });
+  }
+
+  async getByName(name: string): Promise<Category> {
+    return this.categoryRepository.findOne({
+      where: { name },
+    });
+  }
+
+  async findOrCreateCategory(name: string): Promise<Category> {
+    let category = await this.findByName(name);
     if (!category) {
-      category = await this.create({ name: categoryName });
+      category = await this.create({ name: name });
     }
     return category;
   }
