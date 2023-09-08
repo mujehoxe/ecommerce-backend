@@ -30,8 +30,10 @@ export class ProductService {
 
     images &&
       images.length > 0 &&
-      (product.images = images.map((image) =>
-        join('./uploads/', image.filename),
+      (product.images = images.reduce(
+        (result: string[], image) =>
+          image ? result.concat(join('./uploads/', image.filename)) : result,
+        [],
       ));
 
     await this.productRepository.save(product);
@@ -63,8 +65,10 @@ export class ProductService {
         }
       });
 
-      product.images = images.map((image) =>
-        join('./uploads/', image.filename),
+      product.images = images.reduce(
+        (result: string[], image) =>
+          image ? result.concat(join('./uploads/', image.filename)) : result,
+        [],
       );
     }
 

@@ -40,8 +40,8 @@ export class ProductController {
     @Body() createProductDto: CreateProductDto,
     @UploadedFiles() files: Record<string, Express.Multer.File[]>,
   ): Promise<Product> {
-    createProductDto.thumbnail = files['thumbnail'][0];
-    createProductDto.images = files['images'];
+    files['thumbnail'] && (createProductDto.thumbnail = files['thumbnail'][0]);
+    files['images'] && (createProductDto.images = files['images']);
 
     return await this.productService.create(createProductDto);
   }
