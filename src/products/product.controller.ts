@@ -13,12 +13,12 @@ import {
   ParseIntPipe,
   BadRequestException,
 } from '@nestjs/common';
-import { ProductService } from './product.service';
-import { Product } from './product.entity';
-import { CreateProductDto } from './dtos/create-product.dto';
+import { ProductService } from './product.service.js';
+import { Product } from './product.entity.js';
+import { CreateProductDto } from './dtos/create-product.dto.js';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { UpdateProductDto } from './dtos/update-product.dto';
-import { customStorage } from './customStorage';
+import { UpdateProductDto } from './dtos/update-product.dto.js';
+import { customStorage } from './customStorage.js';
 
 @Controller('products')
 export class ProductController {

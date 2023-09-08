@@ -5,11 +5,12 @@ import {
   ManyToOne,
   JoinColumn,
   CreateDateColumn,
+  BaseEntity,
 } from 'typeorm';
-import { Category } from '../categories/category.entity';
+import { Category } from '../categories/category.entity.js';
 
 @Entity()
-export class Product {
+export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

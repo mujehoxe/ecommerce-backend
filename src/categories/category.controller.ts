@@ -1,8 +1,8 @@
 // src/categories/category.controller.ts
 import { Controller, Post, Body, Get } from '@nestjs/common';
-import { CategoryService } from './category.service';
-import { CreateCategoryDto } from './dtos/create-category.dto';
-import { Category } from './category.entity';
+import { CategoryService } from './category.service.js';
+import { CreateCategoryDto } from './dtos/create-category.dto.js';
+import { Category } from './category.entity.js';
 
 @Controller('categories')
 export class CategoryController {

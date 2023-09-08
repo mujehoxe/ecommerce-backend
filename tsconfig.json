@@ -2,14 +2,16 @@
    "compilerOptions": {
       "lib": [
          "es5",
-         "es6"
+         "es6",
+         "DOM"
       ],
-      "target": "es5",
-      "module": "commonjs",
-      "moduleResolution": "node",
+      "moduleResolution": "node16",
+      "module": "node16",
+      "target": "esnext",
       "outDir": "./build",
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
-      "sourceMap": true
+      "sourceMap": true,
+      "skipLibCheck": true
    }
 }

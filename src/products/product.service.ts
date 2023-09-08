@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Product } from './product.entity';
+import { Product } from './product.entity.js';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CategoryService } from '../categories/category.service';
-import { CreateProductDto } from './dtos/create-product.dto';
-import { UpdateProductDto } from './dtos/update-product.dto';
+import { CategoryService } from '../categories/category.service.js';
+import { CreateProductDto } from './dtos/create-product.dto.js';
+import { UpdateProductDto } from './dtos/update-product.dto.js';
 import * as fs from 'fs';
 import { join } from 'path';
 
