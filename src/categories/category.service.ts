@@ -35,7 +35,7 @@ export class CategoryService {
   }
 
   async findOrCreateCategory(name: string): Promise<Category> {
-    let category = await this.findByName(name);
+    let category = await this.getByName(name);
     if (!category) {
       category = await this.create({ name: name });
     }
