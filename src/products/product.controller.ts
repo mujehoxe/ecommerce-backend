@@ -108,6 +108,13 @@ export class ProductController {
     return this.productService.getProductsByCategory(categoryId);
   }
 
+  @Get('search')
+  async searchProductsByKeyword(
+    @Query('keyword') keyword: string,
+  ): Promise<Product[]> {
+    return this.productService.searchProductsByKeyword(keyword);
+  }
+
   @Get(':id')
   getById(@Param('id') id: number): Promise<Product | undefined> {
     return this.productService.getById(id);

@@ -134,4 +134,14 @@ export class ProductService {
       .where('product.category.id = :categoryId', { categoryId })
       .getMany();
   }
+
+  async searchProductsByKeyword(keyword: string): Promise<Product[]> {
+    return this.productRepository
+      .createQueryBuilder('product')
+      .where(
+        'product.name LIKE :keyword OR product.description LIKE :keyword',
+        { keyword: `%${keyword}%` },
+      )
+      .getMany();
+  }
 }
