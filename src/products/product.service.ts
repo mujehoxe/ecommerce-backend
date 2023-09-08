@@ -126,4 +126,12 @@ export class ProductService {
       take: count,
     });
   }
+
+  async getProductsByCategory(categoryId: number): Promise<Product[]> {
+    return await this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category')
+      .where('product.category.id = :categoryId', { categoryId })
+      .getMany();
+  }
 }

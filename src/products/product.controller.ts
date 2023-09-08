@@ -101,6 +101,13 @@ export class ProductController {
     return this.productService.getLatest(count);
   }
 
+  @Get('by-category')
+  async getProductsByCategory(
+    @Query('categoryId', ParseIntPipe) categoryId: number,
+  ): Promise<Product[]> {
+    return this.productService.getProductsByCategory(categoryId);
+  }
+
   @Get(':id')
   getById(@Param('id') id: number): Promise<Product | undefined> {
     return this.productService.getById(id);
