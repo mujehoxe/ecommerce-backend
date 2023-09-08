@@ -138,8 +138,9 @@ export class ProductService {
   async searchProductsByKeyword(keyword: string): Promise<Product[]> {
     return this.productRepository
       .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category')
       .where(
-        'product.name LIKE :keyword OR product.description LIKE :keyword',
+        'product.name LIKE :keyword OR product.description LIKE :keyword OR category.name LIKE :keyword',
         { keyword: `%${keyword}%` },
       )
       .getMany();
