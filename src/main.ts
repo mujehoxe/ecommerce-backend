@@ -7,6 +7,8 @@ import { createSqlDataSource } from '@forestadmin/datasource-sql';
 async function bootstrap() {
   dotenv.config();
 
+  const app = await NestFactory.create(AppModule);
+
   const agent = createAgent({
     authSecret: process.env.FOREST_AUTH_SECRET,
     envSecret: process.env.FOREST_ENV_SECRET,
@@ -14,9 +16,6 @@ async function bootstrap() {
     typingsPath: './typings.ts',
     typingsMaxDepth: 5,
   }).addDataSource(createSqlDataSource(process.env.DATABASE_URL));
-
-  const app = await NestFactory.create(AppModule);
-
   await agent.mountOnNestJs(app).start();
 
   const port = process.env.PORT || 3000;
