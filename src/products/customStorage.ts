@@ -1,4 +1,5 @@
-import { createHash } from 'crypto';
+import { createHash } from 'node:crypto';
+
 import { diskStorage } from 'multer';
 
 export const customStorage = diskStorage({
