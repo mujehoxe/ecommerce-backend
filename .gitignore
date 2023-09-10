@@ -6,4 +6,4 @@ tmp/
 temp/
 uploads/
 .env
-docker.env
+db.docker.env

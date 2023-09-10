@@ -82,8 +82,8 @@ export type Schema = {
       'product:quantity': number;
       'product:thumbnail': string;
       'product:images': string;
-      'product:category_id': number;
       'product:createdAt': string;
+      'product:category_id': number;
       'product:category:id': number;
       'product:category:name': string;
     };
@@ -98,8 +98,8 @@ export type Schema = {
       'quantity': number;
       'thumbnail': string;
       'images': string;
-      'category_id': number;
       'createdAt': string;
+      'category_id': number;
     };
     nested: {
       'category': Schema['category']['plain'] & Schema['category']['nested'];
