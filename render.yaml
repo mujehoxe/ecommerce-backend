@@ -1,0 +1,56 @@
+services:
+  - name: mariadb
+    type: service
+    buildCommand: ./build-mariadb.sh
+    startCommand: ./start-mariadb.sh
+    env:
+      - key: MYSQL_ROOT_PASSWORD
+        from: secret
+        name: mariadb-root-password
+      - key: MYSQL_DATABASE
+        from: secret
+        name: mariadb-database
+      - key: MYSQL_USER
+        from: secret
+        name: mariadb-user
+      - key: MYSQL_PASSWORD
+        from: secret
+        name: mariadb-password
+    healthCheck:
+      httpPort: 3306
+    ports:
+      - internal: 3306
+        external: 3306
+    secrets:
+      - name: mariadb-root-password
+        path: /run/secrets/mariadb-root-password
+      - name: mariadb-database
+        path: /run/secrets/mariadb-database
+      - name: mariadb-user
+        path: /run/secrets/mariadb-user
+      - name: mariadb-password
+        path: /run/secrets/mariadb-password
+
+  - name: app
+    type: service
+    buildCommand: ./build-app.sh
+    startCommand: npm start
+    env:
+      - key: DB_HOST
+        from: service
+        name: mariadb
+    healthCheck:
+      httpPort: 3000
+    ports:
+      - internal: 3000
+        external: 3000
+
+  - name: render
+    type: service
+    buildCommand: ./build-render.sh
+    startCommand: ./start-render.sh
+    healthCheck:
+      httpPort: 8080
+    ports:
+      - internal: 8080
+        external: 8080
