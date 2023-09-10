@@ -1,0 +1,51 @@
+services:
+  - type: web
+    name: db
+    env: render.yaml
+    build:
+      dockerfile: Dockerfile
+      context: .
+    startCommand: ["docker-entrypoint.sh", "mysqld"]
+    healthCheck:
+      httpEndpoint: 3306
+    envVars:
+      - name: MYSQL_ROOT_PASSWORD
+        fromDatabase:
+          secret: mariadb
+          key: MYSQL_ROOT_PASSWORD
+      - name: MYSQL_DATABASE
+        fromDatabase:
+          secret: mariadb
+          key: MYSQL_DATABASE
+      - name: MYSQL_USER
+        fromDatabase:
+          secret: mariadb
+          key: MYSQL_USER
+      - name: MYSQL_PASSWORD
+        fromDatabase:
+          secret: mariadb
+          key: MYSQL_PASSWORD
+    ports:
+      - internal: 3306
+        external: 3306
+    secrets:
+      - name: mariadb
+        mountPath: /run/secrets/mariadb
+  - type: web
+    name: app
+    env: render.yaml
+    build:
+      dockerfile: Dockerfile
+      context: .
+    startCommand: npm start
+    healthCheck:
+      httpEndpoint: 3000
+    envVars:
+      - name: DB_HOST
+        fromService: db
+    ports:
+      - internal: 3000
+        external: 3000
+    secrets:
+      - name: mariadb
+        mountPath: /run/secrets/mariadb
