@@ -2,13 +2,13 @@ version: '3.5'
 
 services:
   db:
-    image: mariadb:10.6
+    image: postgres
     restart: always
-    container_name: MARIADB
+    container_name: POSTGRES
     env_file:
-      - docker.env
+      - .docker.env
     ports:
-      - '3306:3306'
+      - '5432:5432'
   app:
     build:
       context: .
@@ -18,4 +18,4 @@ services:
     depends_on:
       - db
     env_file:
-      - docker.env
+      - .docker.env

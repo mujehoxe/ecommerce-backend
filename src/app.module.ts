@@ -6,6 +6,7 @@ import { FileController } from './file.controller.js';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
+      type: (process.env.DATABASE_TYPE as any) || 'postgres',
       url: process.env.DATABASE_URL,
       autoLoadEntities: true,
       synchronize: true,
