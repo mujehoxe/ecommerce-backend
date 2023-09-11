@@ -7,5 +7,4 @@ temp/
 uploads/
 .env
 docker.env
-.forestadmin-schema.json
 typings.ts
