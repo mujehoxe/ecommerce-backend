@@ -61,6 +61,8 @@ export class ProductController {
       { storage: customStorage },
     ),
   )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UpdateProductDto })
   async update(
     @Param('id') id: number,
     @Body() updateProductDto: UpdateProductDto,
