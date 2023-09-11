@@ -7,9 +7,7 @@ import { createSqlDataSource } from '@forestadmin/datasource-sql';
 async function bootstrap() {
   dotenv.config();
 
-  console.log(process.env.DATABASE_URL);
-
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   const agent = createAgent({
     authSecret: process.env.FOREST_AUTH_SECRET,
