@@ -4,3 +4,4 @@ build
 docker.env
 uploads
 .forestadmin-schema.json
+typings.ts
