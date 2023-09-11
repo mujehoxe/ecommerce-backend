@@ -19,6 +19,7 @@ import { CreateProductDto } from './dtos/create-product.dto.js';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UpdateProductDto } from './dtos/update-product.dto.js';
 import { customStorage } from './customStorage.js';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 
 @Controller('products')
 export class ProductController {
@@ -36,6 +37,8 @@ export class ProductController {
       },
     ),
   )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: CreateProductDto })
   async create(
     @Body() createProductDto: CreateProductDto,
     @UploadedFiles() files: Record<string, Express.Multer.File[]>,

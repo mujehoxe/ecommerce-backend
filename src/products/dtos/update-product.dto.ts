@@ -1,34 +1,54 @@
-// src/products/dtos/update-product.dto.ts
-import { IsOptional, IsString, IsNumber } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString, IsNumber, IsOptional } from 'class-validator';
 
 export class UpdateProductDto {
-  @IsOptional()
+  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
-  name?: string;
+  name: string;
 
-  @IsOptional()
+  @ApiProperty({ required: false })
   @IsString()
-  description?: string;
-
   @IsOptional()
-  @IsNumber()
-  price?: number;
+  description: string;
 
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  price: number;
+
+  @ApiProperty({
+    description: 'Discount percentage',
+    required: false,
+  })
+  @IsNumber()
   @IsOptional()
-  @IsNumber()
-  percentage?: number;
+  percentage: number;
 
-  @IsOptional()
+  @ApiProperty()
+  @IsNotEmpty()
   @IsNumber()
-  quantity?: number;
+  quantity: number;
 
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'The file to upload.',
+    required: false,
+  })
   @IsOptional()
   thumbnail?: Express.Multer.File;
 
+  @ApiProperty({
+    type: 'array',
+    items: { type: 'string', format: 'binary' },
+    required: false,
+  })
   @IsOptional()
   images?: Express.Multer.File[];
 
-  @IsOptional()
+  @ApiProperty({ required: false })
   @IsString()
-  categoryName?: string;
+  @IsOptional()
+  categoryName: string;
 }
