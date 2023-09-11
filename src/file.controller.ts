@@ -1,13 +1,32 @@
-import { Controller, Get, Header, Param, StreamableFile } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Header,
+  NotFoundException,
+  Param,
+  StreamableFile,
+} from '@nestjs/common';
 import { createReadStream } from 'fs';
-import { join } from 'path';
+import { extname, join } from 'path';
+import { existsSync } from 'node:fs';
 
 @Controller('uploads')
 export class FileController {
   @Get(':filename')
   @Header('Content-Type', 'image')
-  getFile(@Param('filename') filename: string): StreamableFile {
-    const file = createReadStream(join(process.cwd(), 'uploads', filename));
-    return new StreamableFile(file);
+  async getFile(@Param('filename') filename: string): Promise<StreamableFile> {
+    try {
+      const filePath = join(process.cwd(), 'uploads', filename);
+
+      if (!existsSync(filePath)) {
+        throw new NotFoundException('File not found');
+      }
+
+      const file = createReadStream(filePath);
+      const fileExtension = extname(filename).toLowerCase();
+      return new StreamableFile(file, { type: `image/${fileExtension}` });
+    } catch (error) {
+      throw new NotFoundException('File not found', error);
+    }
   }
 }
