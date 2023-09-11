@@ -1,7 +1,7 @@
 // order.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { Order } from './order.entity';
 import { CheckoutDto } from './dtos/checkout.dto';
 import { ProductService } from '../products/product.service';
@@ -18,7 +18,6 @@ export class OrderService {
   async createOrder(checkoutData: CheckoutDto): Promise<Order> {
     const order = new Order();
 
-    // Store user information in the order
     order.firstName = checkoutData.first_name;
     order.lastName = checkoutData.last_name;
     order.state = checkoutData.state;
@@ -37,7 +36,25 @@ export class OrderService {
 
     // order.totalPrice = calculateTotalPrice(order.orderedProducts);
 
-    // Save the order
     return this.orderRepository.save(order);
+  }
+
+  async getAll(): Promise<Order[]> {
+    return this.orderRepository.find({});
+  }
+
+  async getById(id: number): Promise<Order | undefined> {
+    const product = await this.orderRepository.findOne({ where: { id } });
+
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+
+    return product;
+  }
+
+  async delete(id: number): Promise<DeleteResult> {
+    await this.getById(id);
+    return await this.orderRepository.delete(id);
   }
 }
