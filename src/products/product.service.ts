@@ -113,10 +113,10 @@ export class ProductService {
     return product;
   }
 
-  async getAll(page = 1, pageSize = 10): Promise<Product[]> {
+  async getAll(page = 1, pageSize = 10): Promise<[Product[], number]> {
     const skip = (page - 1) * pageSize;
 
-    return this.productRepository.find({
+    return this.productRepository.findAndCount({
       skip,
       take: pageSize,
     });
