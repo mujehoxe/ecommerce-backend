@@ -8,7 +8,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   dotenv.config();
 
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
+
+  app.enableCors({ origin: '*' });
+
 
   const agent = createAgent({
     authSecret: process.env.FOREST_AUTH_SECRET,
