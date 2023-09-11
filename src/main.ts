@@ -7,6 +7,8 @@ import { createSqlDataSource } from '@forestadmin/datasource-sql';
 async function bootstrap() {
   dotenv.config();
 
+  console.log(process.env.DATABASE_URL);
+
   const app = await NestFactory.create(AppModule);
 
   const agent = createAgent({
