@@ -1,7 +1,6 @@
 node_modules
 build
 .git
-.env
 docker.env
 uploads
 .forestadmin-schema.json
