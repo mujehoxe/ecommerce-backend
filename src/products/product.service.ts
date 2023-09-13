@@ -116,10 +116,14 @@ export class ProductService {
   async getAll(page = 1, pageSize = 10): Promise<[Product[], number]> {
     const skip = (page - 1) * pageSize;
 
-    return this.productRepository.findAndCount({
-      skip,
-      take: pageSize,
-    });
+    const [products, total] = await this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category')
+      .skip(skip)
+      .take(pageSize)
+      .getManyAndCount();
+
+    return [products, total];
   }
 
   async getLatest(count: number): Promise<Product[]> {
