@@ -3,7 +3,7 @@ import { AppModule } from './app.module.js';
 import * as dotenv from 'dotenv';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 
 async function bootstrap() {
   dotenv.config();
@@ -16,6 +16,13 @@ async function bootstrap() {
   });
 
   app.enableCors({ origin: '*' });
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   const config = new DocumentBuilder().setTitle('E-commerce Platform').build();
   const document = SwaggerModule.createDocument(app, config);
