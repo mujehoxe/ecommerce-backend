@@ -6,5 +6,5 @@ tmp/
 temp/
 uploads/
 .env
-docker.env
+.docker.env
 typings.ts
