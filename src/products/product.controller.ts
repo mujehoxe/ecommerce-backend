@@ -12,6 +12,7 @@ import {
   Query,
   ParseIntPipe,
   BadRequestException,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ProductService } from './product.service.js';
 import { Product } from './product.entity.js';
@@ -117,8 +118,12 @@ export class ProductController {
 
   @Get('search')
   async searchProductsByKeyword(
-    @Query('keyword') keyword: string,
+    @Query('keyword', new ValidationPipe({ transform: true })) keyword: string,
   ): Promise<Product[]> {
+    if (!keyword) {
+      throw new BadRequestException('Keyword is required.');
+    }
+
     return this.productService.searchProductsByKeyword(keyword);
   }
 
