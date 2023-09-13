@@ -5,12 +5,13 @@ import {
   NotFoundException,
   Param,
   StreamableFile,
+  VERSION_NEUTRAL,
 } from '@nestjs/common';
 import { createReadStream } from 'fs';
 import { extname, join } from 'path';
 import { existsSync } from 'node:fs';
 
-@Controller('uploads')
+@Controller({ path: 'uploads', version: VERSION_NEUTRAL })
 export class FileController {
   @Get(':filename')
   @Header('Content-Type', 'image')
