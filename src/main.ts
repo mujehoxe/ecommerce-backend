@@ -17,12 +17,6 @@ async function bootstrap() {
 
   app.enableCors({ origin: '*' });
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-    }),
-  );
-
   const config = new DocumentBuilder().setTitle('E-commerce Platform').build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
