@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNumber, IsOptional } from 'class-validator';
 
 export class UpdateProductDto {
+  @ApiProperty({ required: false })
   @ApiProperty()
   @IsString()
   @IsOptional()
@@ -12,7 +13,7 @@ export class UpdateProductDto {
   @IsOptional()
   description: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsNumber()
   @IsOptional()
   price: number;
@@ -25,7 +26,7 @@ export class UpdateProductDto {
   @IsOptional()
   percentage: number;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsNumber()
   @IsOptional()
   quantity: number;
