@@ -112,19 +112,31 @@ export class ProductController {
   @Get('by-category')
   async getProductsByCategory(
     @Query('categoryId', ParseIntPipe) categoryId: number,
-  ): Promise<Product[]> {
-    return this.productService.getProductsByCategory(categoryId);
+    @Query('page') page: number = 1,
+    @Query('pageSize') pageSize: number = 10,
+  ): Promise<[Product[], number]> {
+    if (!categoryId) {
+      throw new BadRequestException('Category ID is required.');
+    }
+
+    return this.productService.getProductsByCategory(
+      categoryId,
+      page,
+      pageSize,
+    );
   }
 
   @Get('search')
   async searchProductsByKeyword(
     @Query('keyword', new ValidationPipe({ transform: true })) keyword: string,
-  ): Promise<Product[]> {
+    @Query('page') page: number = 1,
+    @Query('pageSize') pageSize: number = 10,
+  ): Promise<[Product[], number]> {
     if (!keyword) {
       throw new BadRequestException('Keyword is required.');
     }
 
-    return this.productService.searchProductsByKeyword(keyword);
+    return this.productService.searchProductsByKeyword(keyword, page, pageSize);
   }
 
   @Get(':id')

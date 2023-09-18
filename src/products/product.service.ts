@@ -135,22 +135,34 @@ export class ProductService {
     });
   }
 
-  async getProductsByCategory(categoryId: number): Promise<Product[]> {
+  async getProductsByCategory(
+    categoryId: number,
+    page: number = 1,
+    pageSize: number = 10,
+  ): Promise<[Product[], number]> {
     return await this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category')
-      .where('product.category.id = :categoryId', { categoryId })
-      .getMany();
+      .where('category.id = :categoryId', { categoryId })
+      .skip((page - 1) * pageSize)
+      .take(pageSize)
+      .getManyAndCount();
   }
 
-  async searchProductsByKeyword(keyword: string): Promise<Product[]> {
-    return this.productRepository
+  async searchProductsByKeyword(
+    keyword: string,
+    page: number = 1,
+    pageSize: number = 10,
+  ): Promise<[Product[], number]> {
+    return await this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category')
       .where(
         'product.name LIKE :keyword OR product.description LIKE :keyword OR category.name LIKE :keyword',
         { keyword: `%${keyword}%` },
       )
-      .getMany();
+      .skip((page - 1) * pageSize)
+      .take(pageSize)
+      .getManyAndCount();
   }
 }
