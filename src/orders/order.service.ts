@@ -23,6 +23,7 @@ export class OrderService {
     order.state = checkoutData.state;
     order.phoneNumber = checkoutData.phoneNumber;
     order.address = checkoutData.address;
+    order.totalPrice = checkoutData.totalPrice;
 
     order.orderedProducts = await Promise.all(
       checkoutData.products.map(async ({ productId, quantity }) => {

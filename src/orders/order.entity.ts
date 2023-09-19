@@ -31,4 +31,7 @@ export class Order {
   @ManyToMany(() => Product, { eager: true })
   @JoinTable()
   orderedProducts: { product: Product; quantity: number }[];
+
+  @Column({ type: 'float', nullable: true })
+  totalPrice?: number;
 }

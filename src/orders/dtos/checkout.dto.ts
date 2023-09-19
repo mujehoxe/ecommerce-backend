@@ -52,4 +52,7 @@ export class CheckoutDto {
   @ValidateNested({ each: true })
   @Type(() => CheckoutProductDto)
   products: CheckoutProductDto[];
+
+  @ApiProperty()
+  totalPrice: number;
 }
