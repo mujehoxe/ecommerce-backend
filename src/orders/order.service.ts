@@ -45,13 +45,13 @@ export class OrderService {
   }
 
   async getById(id: number): Promise<Order | undefined> {
-    const product = await this.orderRepository.findOne({ where: { id } });
+    const order = await this.orderRepository.findOne({ where: { id } });
 
-    if (!product) {
-      throw new NotFoundException(`Product with ID ${id} not found`);
+    if (!order) {
+      throw new NotFoundException(`Order with ID ${id} not found`);
     }
 
-    return product;
+    return order;
   }
 
   async delete(id: number): Promise<DeleteResult> {
