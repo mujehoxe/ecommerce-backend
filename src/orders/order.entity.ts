@@ -1,13 +1,8 @@
 // order.entity.ts
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToMany,
-  JoinTable,
-} from 'typeorm';
-import { Product } from '../products/product.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { OrderedProduct } from './orderedProduct.entity';
 
+type OrderStatus = 'pending' | 'accepted';
 @Entity()
 export class Order {
   @PrimaryGeneratedColumn()
@@ -19,7 +14,7 @@ export class Order {
   @Column()
   lastName: string;
 
-  @Column()
+  @Column({ nullable: true })
   state: string;
 
   @Column()
@@ -28,6 +23,8 @@ export class Order {
   @Column()
   address: string;
 
+  @Column({ nullable: true })
+  status: OrderStatus = 'pending';
 
   @OneToMany(() => OrderedProduct, (orderedProduct) => orderedProduct.order, {
     eager: true,
