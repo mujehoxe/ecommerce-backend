@@ -1,4 +1,11 @@
-import { IsString, IsArray, ValidateNested, IsInt, Min } from 'class-validator';
+import {
+  IsString,
+  IsArray,
+  ValidateNested,
+  IsInt,
+  Min,
+  IsOptional,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -31,9 +38,12 @@ export class CheckoutDto {
   @IsString()
   last_name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    nullable: true,
+  })
   @IsString()
-  state: string;
+  @IsOptional()
+  state?: string;
 
   @ApiProperty()
   @IsString()
@@ -51,7 +61,7 @@ export class CheckoutDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CheckoutProductDto)
-  products: CheckoutProductDto[];
+  orderedProducts: CheckoutProductDto[];
 
   @ApiProperty()
   totalPrice: number;
