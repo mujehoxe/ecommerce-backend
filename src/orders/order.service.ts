@@ -5,6 +5,7 @@ import { DeleteResult, Repository } from 'typeorm';
 import { Order } from './order.entity';
 import { CheckoutDto } from './dtos/checkout.dto';
 import { ProductService } from '../products/product.service';
+import { OrderedProduct } from './orderedProduct.entity';
 
 @Injectable()
 export class OrderService {
@@ -26,16 +27,13 @@ export class OrderService {
     order.totalPrice = checkoutData.totalPrice;
 
     order.orderedProducts = await Promise.all(
-      checkoutData.products.map(async ({ productId, quantity }) => {
-        const product = await this.productService.getById(productId);
-        if (!product) {
-          throw new Error(`Product with ID ${productId} not found.`);
-        }
-        return { product, quantity };
+      checkoutData.orderedProducts.map(async ({ productId, quantity }) => {
+        const orderedProduct = new OrderedProduct();
+        orderedProduct.product = await this.productService.getById(productId);
+        orderedProduct.quantity = quantity;
+        return orderedProduct;
       }),
     );
-
-    // order.totalPrice = calculateTotalPrice(order.orderedProducts);
 
     return this.orderRepository.save(order);
   }

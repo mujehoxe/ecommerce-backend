@@ -28,9 +28,12 @@ export class Order {
   @Column()
   address: string;
 
-  @ManyToMany(() => Product, { eager: true })
-  @JoinTable()
-  orderedProducts: { product: Product; quantity: number }[];
+
+  @OneToMany(() => OrderedProduct, (orderedProduct) => orderedProduct.order, {
+    eager: true,
+    cascade: ['insert'],
+  })
+  orderedProducts: OrderedProduct[];
 
   @Column({ type: 'float', nullable: true })
   totalPrice?: number;
