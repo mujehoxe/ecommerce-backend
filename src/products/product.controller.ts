@@ -44,10 +44,7 @@ export class ProductController {
     @Body() createProductDto: CreateProductDto,
     @UploadedFiles() files: Record<string, Express.Multer.File[]>,
   ): Promise<Product> {
-    files &&
-      files['thumbnail'] &&
-      (createProductDto.thumbnail = files['thumbnail'][0]);
-    files && files['images'] && (createProductDto.images = files['images']);
+    this.retrieveFilesInDTO(files, createProductDto);
 
     return await this.productService.create(createProductDto);
   }
@@ -70,9 +67,7 @@ export class ProductController {
     @UploadedFiles() files: Record<string, Express.Multer.File[]>,
   ): Promise<Product> {
     try {
-      files['thumbnail'] &&
-        (updateProductDto.thumbnail = files['thumbnail'][0]);
-      files['images'] && (updateProductDto.images = files['images']);
+      this.retrieveFilesInDTO(files, updateProductDto);
 
       return await this.productService.update(id, updateProductDto);
     } catch (error) {
@@ -81,6 +76,14 @@ export class ProductController {
       }
       throw error;
     }
+  }
+
+  private retrieveFilesInDTO(
+    files: Record<string, Express.Multer.File[]>,
+    DTO: CreateProductDto | UpdateProductDto,
+  ) {
+    files && files['thumbnail'] && (DTO.thumbnail = files['thumbnail'][0]);
+    files && files['images'] && (DTO.images = files['images']);
   }
 
   @Delete(':id')
