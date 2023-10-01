@@ -1,0 +1,14 @@
+name: Install Dependencies
+
+on:
+  workflow_run:
+    workflows: ['Deploy']
+    types:
+      - workflow_run
+
+jobs:
+  install-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
