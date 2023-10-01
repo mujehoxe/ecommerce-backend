@@ -15,8 +15,11 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Install Dependencies
-        uses: ./.github/install-deps
+      - name: Setup Node
+        uses: actions/setup-node@v3
+
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
 
       - name: Build project
         run: npm run build
