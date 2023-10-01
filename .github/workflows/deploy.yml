@@ -43,6 +43,6 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DATABASE_TYPE: ${{ vars.DATABASE_TYPE }}
           NODE_ENV: ${{ vars.NODE_ENV }}
+          run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/backend && DATABASE_URL='${DATABASE_URL}' NODE_ENV='${NODE_ENV}' DATABASE_TYPE='${DATABASE_TYPE}' node build/main >> app.log 2>&1 &"
         timeout-minutes: 10
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/backend && DATABASE_URL='${DATABASE_URL}' NODE_ENV='${NODE_ENV}' DATABASE_TYPE='${DATABASE_TYPE}' node build/main >> ~/app.log 2>&1 &"
