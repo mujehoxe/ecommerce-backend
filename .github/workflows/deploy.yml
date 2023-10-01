@@ -40,4 +40,5 @@ jobs:
           rsync -avz node_modules/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/node_modules/
 
       - name: Run Node.js Application
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} | 'DATABASE_URL="${DATABASE_URL}" NODE_ENV="${NODE_ENV}" DATABASE_TYPE=${DATABASE_TYPE} node build/main'
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "DATABASE_URL='${DATABASE_URL}' NODE_ENV='${NODE_ENV}' DATABASE_TYPE='${DATABASE_TYPE}' node build/main"
