@@ -5,6 +5,8 @@ import { FileController } from './file.controller.js';
 import * as dotenv from 'dotenv';
 import { ProductModule } from './products/product.module.js';
 import { CategoryModule } from './categories/category.module.js';
+import { join } from 'node:path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 dotenv.config();
 
@@ -16,6 +18,9 @@ dotenv.config();
       autoLoadEntities: true,
       synchronize: true,
       ssl: process.env.NODE_ENV === 'production',
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client'),
     }),
     OrderModule,
     ProductModule,
