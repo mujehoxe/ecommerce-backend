@@ -2,11 +2,6 @@ name: deploy
 
 on: [push]
 
-env:
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  DATABASE_TYPE: ${{ vars.DATABASE_TYPE }}
-  NODE_ENV: ${{ vars.NODE_ENV }}
-
 jobs:
   build:
     name: Build
@@ -40,5 +35,9 @@ jobs:
           rsync -avz node_modules/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/node_modules/
 
       - name: Run Node.js Application
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_TYPE: ${{ vars.DATABASE_TYPE }}
+          NODE_ENV: ${{ vars.NODE_ENV }}
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "DATABASE_URL='${DATABASE_URL}' NODE_ENV='${NODE_ENV}' DATABASE_TYPE='${DATABASE_TYPE}' node build/main"
