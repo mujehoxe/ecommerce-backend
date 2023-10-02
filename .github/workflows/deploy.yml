@@ -35,7 +35,7 @@ jobs:
 
       - name: Deploy with rsync
         run: |
-          rsync -avz build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/backend/build/
+          rsync -avz build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/build/
 
       - name: Run Node.js Application
         env:
@@ -43,5 +43,5 @@ jobs:
           DATABASE_TYPE: ${{ vars.DATABASE_TYPE }}
           NODE_ENV: ${{ vars.NODE_ENV }}
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "DATABASE_URL='${DATABASE_URL}' NODE_ENV='${NODE_ENV}' DATABASE_TYPE='${DATABASE_TYPE}' node backend/build/main >> backend/app.log 2>&1 &"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "DATABASE_URL='${DATABASE_URL}' NODE_ENV='${NODE_ENV}' DATABASE_TYPE='${DATABASE_TYPE}' node build/main >> app.log 2>&1 &"
         timeout-minutes: 10
