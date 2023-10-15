@@ -39,11 +39,20 @@ export class OrderService {
   }
 
   async getAll(): Promise<Order[]> {
-    return this.orderRepository.find({});
+    return this.orderRepository
+      .createQueryBuilder('order')
+      .leftJoinAndSelect('order.orderedProducts', 'orderedProducts')
+      .leftJoinAndSelect('orderedProducts.product', 'product')
+      .getMany();
   }
 
-  async getById(id: number): Promise<Order | undefined> {
-    const order = await this.orderRepository.findOne({ where: { id } });
+  async getById(id: number): Promise<Order> {
+    const order = await this.orderRepository
+      .createQueryBuilder('order')
+      .leftJoinAndSelect('order.orderedProducts', 'orderedProducts')
+      .leftJoinAndSelect('orderedProducts.product', 'product')
+      .where('order.id = :id', { id })
+      .getOne();
 
     if (!order) {
       throw new NotFoundException(`Order with ID ${id} not found`);
