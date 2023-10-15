@@ -34,7 +34,7 @@ jobs:
 
       - name: Kill Node.js App
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pkill -f 'node build/main'"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pkill -f 'node build/main'" || echo "No matching processes found"
 
       - name: Deploy with rsync
         run: |
