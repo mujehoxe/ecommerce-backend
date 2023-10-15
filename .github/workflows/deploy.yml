@@ -47,10 +47,6 @@ jobs:
           rsync -avz build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/build/
           rsync -avz node_modules/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/node_modules/
 
-      - name: Create package.json in ~/admin
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo '{\"type\": \"module\"}' > ~/admin/package.json"
-
       - name: Run Node.js Application
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
