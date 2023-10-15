@@ -2,7 +2,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { OrderedProduct } from './orderedProduct.entity';
 
-type OrderStatus = 'pending' | 'accepted';
+export type OrderStatus = 'pending' | 'accepted' | 'declined' | 'archived';
+
 @Entity()
 export class Order {
   @PrimaryGeneratedColumn()

@@ -1,11 +1,18 @@
 // order.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import {
+  DataSource,
+  DeleteResult,
+  EntityManager,
+  Repository,
+  UpdateResult,
+} from 'typeorm';
 import { Order } from './order.entity';
 import { CheckoutDto } from './dtos/checkout.dto';
 import { ProductService } from '../products/product.service';
 import { OrderedProduct } from './orderedProduct.entity';
+import { Product } from '../products/product.entity';
 
 @Injectable()
 export class OrderService {
@@ -14,6 +21,8 @@ export class OrderService {
     private readonly orderRepository: Repository<Order>,
 
     private readonly productService: ProductService,
+
+    private dataSource: DataSource,
   ) {}
 
   async createOrder(checkoutData: CheckoutDto): Promise<Order> {
@@ -36,6 +45,56 @@ export class OrderService {
     );
 
     return this.orderRepository.save(order);
+  }
+
+  async archive(id: number): Promise<UpdateResult> {
+    return await this.orderRepository.update(
+      { id: id },
+      { status: 'archived' },
+    );
+  }
+
+  async decline(id: number): Promise<UpdateResult> {
+    return await this.orderRepository.update(
+      { id: id },
+      { status: 'declined' },
+    );
+  }
+
+  async accept(id: number): Promise<UpdateResult> {
+    const order = await this.getById(id);
+
+    if (order.status === 'accepted') throw new Error('Order alredy accepted');
+
+    const res = await this.dataSource.transaction(async (manager) => {
+      for (const orderedProduct of order.orderedProducts)
+        await this.sellProduct(orderedProduct, manager);
+    });
+
+    console.log(res);
+
+    return await this.orderRepository.update(
+      { id: id },
+      { status: 'accepted' },
+    );
+  }
+
+  async sellProduct(
+    orderedProduct: OrderedProduct,
+    queryManager: EntityManager,
+  ) {
+    const { product, quantity: quantitySold } = orderedProduct;
+    if (product.quantity >= quantitySold) {
+      await queryManager.update(
+        Product,
+        { id: product.id },
+        {
+          quantity: product.quantity - quantitySold,
+        },
+      );
+    } else {
+      throw new Error('Insufficient quantity available for sale');
+    }
   }
 
   async getAll(): Promise<Order[]> {
