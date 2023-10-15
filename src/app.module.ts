@@ -22,6 +22,10 @@ dotenv.config();
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'admin'),
+      serveRoot: '/admin',
+    }),
     OrderModule,
     ProductModule,
     CategoryModule,
