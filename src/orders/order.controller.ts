@@ -9,6 +9,7 @@ import {
   Patch,
   HttpException,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { Order } from './order.entity';
@@ -52,8 +53,10 @@ export class OrderController {
   }
 
   @Get()
-  async getAll(): Promise<Order[]> {
-    return this.orderService.getAll();
+  async getAll(@Query('archived') archivedParam: string): Promise<Order[]> {
+    const archived: boolean = archivedParam === 'true';
+
+    return this.orderService.getAll(archived);
   }
 
   @Get(':id')

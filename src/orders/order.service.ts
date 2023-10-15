@@ -97,9 +97,16 @@ export class OrderService {
     }
   }
 
-  async getAll(): Promise<Order[]> {
-    return this.orderRepository
-      .createQueryBuilder('order')
+  async getAll(archived: boolean): Promise<Order[]> {
+    let query = this.orderRepository.createQueryBuilder('order');
+
+    if (archived === true) {
+      query = query.where('status = :status', { status: 'archived' });
+    } else {
+      query = query.where('status != :status', { status: 'archived' });
+    }
+
+    return query
       .leftJoinAndSelect('order.orderedProducts', 'orderedProducts')
       .leftJoinAndSelect('orderedProducts.product', 'product')
       .getMany();
