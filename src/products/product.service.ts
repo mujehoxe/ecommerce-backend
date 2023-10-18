@@ -126,6 +126,10 @@ export class ProductService {
     return [products, total];
   }
 
+  async getCount(): Promise<number> {
+    return await this.productRepository.count();
+  }
+
   async getLatest(count: number): Promise<Product[]> {
     return this.productRepository.find({
       order: {

@@ -99,6 +99,11 @@ export class ProductController {
     return this.productService.getAll(page, pageSize);
   }
 
+  @Get('count')
+  async getCount(): Promise<number> {
+    return this.productService.getCount();
+  }
+
   @Get('latest')
   async getLatest(@Query('count') countQueryParam: string): Promise<Product[]> {
     const count = parseInt(countQueryParam) || 10;
