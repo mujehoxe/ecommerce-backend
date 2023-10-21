@@ -8,7 +8,7 @@ export class OrderedProduct {
   id: number;
 
   @ManyToOne(() => Order, (order) => order.orderedProducts, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   order: Order;
 

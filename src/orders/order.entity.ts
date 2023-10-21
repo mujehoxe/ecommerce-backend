@@ -29,7 +29,7 @@ export class Order {
 
   @OneToMany(() => OrderedProduct, (orderedProduct) => orderedProduct.order, {
     eager: true,
-    onDelete: 'CASCADE',
+    cascade: true,
   })
   orderedProducts: OrderedProduct[];
 
