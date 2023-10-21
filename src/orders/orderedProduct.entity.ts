@@ -10,7 +10,7 @@ export class OrderedProduct {
   @ManyToOne(() => Order, (order) => order.orderedProducts)
   order: Order;
 
-  @ManyToOne(() => Product, { cascade: true })
+  @ManyToOne(() => Product)
   product: Product;
 
   @Column()
