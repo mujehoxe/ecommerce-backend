@@ -20,9 +20,10 @@ import { CreateProductDto } from './dtos/create-product.dto.js';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UpdateProductDto } from './dtos/update-product.dto.js';
 import { customStorage } from './customStorage.js';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 @Controller('products')
+@ApiTags('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 

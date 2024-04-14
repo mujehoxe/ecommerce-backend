@@ -15,8 +15,10 @@ import { OrderService } from './order.service';
 import { Order } from './order.entity';
 import { CheckoutDto } from './dtos/checkout.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('orders')
+@ApiTags('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
