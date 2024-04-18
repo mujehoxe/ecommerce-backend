@@ -18,12 +18,14 @@ async function bootstrap() {
 
   app.enableCors({ origin: '*' });
 
-  const config = new DocumentBuilder()
-    .setTitle('E-commerce Platform')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  if (process.env.NODE_ENV !== 'production') {
+    const config = new DocumentBuilder()
+      .setTitle('E-commerce Platform')
+      .addBearerAuth()
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('docs', app, document);
+  }
 
   const port = process.env.PORT || 3000;
 
