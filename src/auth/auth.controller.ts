@@ -54,6 +54,7 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @ApiOperation({ summary: 'Refresh accessToken without re-login' })
   @ApiBody({
     type: RefreshDto,
     description: 'refresh token',
