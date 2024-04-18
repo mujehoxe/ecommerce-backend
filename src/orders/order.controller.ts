@@ -16,12 +16,14 @@ import { Order } from './order.entity';
 import { CheckoutDto } from './dtos/checkout.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { ApiTags } from '@nestjs/swagger';
+import { Public } from '../auth/auth.guard';
 
 @Controller('orders')
 @ApiTags('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
+  @Public()
   @Post('checkout')
   async checkout(
     @Body(ValidationPipe) checkoutData: CheckoutDto,
