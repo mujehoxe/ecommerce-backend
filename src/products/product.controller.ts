@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Post,
   Delete,
   Param,
@@ -9,10 +8,6 @@ import {
   UploadedFiles,
   UseInterceptors,
   Patch,
-  Query,
-  ParseIntPipe,
-  BadRequestException,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ProductService } from './product.service.js';
 import { Product } from './product.entity.js';
@@ -90,66 +85,5 @@ export class ProductController {
   @Delete(':id')
   delete(@Param('id') id: number): Promise<void> {
     return this.productService.delete(id);
-  }
-
-  @Get()
-  async getAll(
-    @Query('page') page: number = 1,
-    @Query('pageSize') pageSize: number = 10,
-  ): Promise<[Product[], number]> {
-    return this.productService.getAll(page, pageSize);
-  }
-
-  @Get('count')
-  async getCount(): Promise<number> {
-    return this.productService.getCount();
-  }
-
-  @Get('latest')
-  async getLatest(@Query('count') countQueryParam: string): Promise<Product[]> {
-    const count = parseInt(countQueryParam) || 10;
-
-    if (count < 1 || count > 100) {
-      throw new BadRequestException(
-        'Invalid count parameter. Count must be between 1 and 100.',
-      );
-    }
-
-    return this.productService.getLatest(count);
-  }
-
-  @Get('by-category')
-  async getProductsByCategory(
-    @Query('categoryId', ParseIntPipe) categoryId: number,
-    @Query('page') page: number = 1,
-    @Query('pageSize') pageSize: number = 10,
-  ): Promise<[Product[], number]> {
-    if (!categoryId) {
-      throw new BadRequestException('Category ID is required.');
-    }
-
-    return this.productService.getProductsByCategory(
-      categoryId,
-      page,
-      pageSize,
-    );
-  }
-
-  @Get('search')
-  async searchProductsByKeyword(
-    @Query('keyword', new ValidationPipe({ transform: true })) keyword: string,
-    @Query('page') page: number = 1,
-    @Query('pageSize') pageSize: number = 10,
-  ): Promise<[Product[], number]> {
-    if (!keyword) {
-      throw new BadRequestException('Keyword is required.');
-    }
-
-    return this.productService.searchProductsByKeyword(keyword, page, pageSize);
-  }
-
-  @Get(':id')
-  getById(@Param('id') id: number): Promise<Product | undefined> {
-    return this.productService.getById(id);
   }
 }
