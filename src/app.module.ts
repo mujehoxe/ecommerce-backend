@@ -2,14 +2,15 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrderModule } from './orders/order.module.js';
 import { FileController } from './file.controller.js';
-import * as dotenv from 'dotenv';
 import { ProductModule } from './products/product.module.js';
 import { CategoryModule } from './categories/category.module.js';
-import { join } from 'node:path';
-import { ServeStaticModule } from '@nestjs/serve-static';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { configDotenv } from 'dotenv';
+import { APP_GUARD } from '@nestjs/core';
+import { DefaultGuard } from './auth/auth.guard.js';
 
-dotenv.config();
-
+configDotenv();
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -19,12 +20,17 @@ dotenv.config();
       synchronize: true,
       ssl: process.env.NODE_ENV === 'production',
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client'),
-    }),
     OrderModule,
     ProductModule,
     CategoryModule,
+    AuthModule,
+    UserModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: DefaultGuard,
+    },
   ],
   controllers: [FileController],
 })

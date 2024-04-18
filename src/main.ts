@@ -9,6 +9,7 @@ async function bootstrap() {
   dotenv.config();
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: 'v1',
@@ -17,7 +18,10 @@ async function bootstrap() {
 
   app.enableCors({ origin: '*' });
 
-  const config = new DocumentBuilder().setTitle('E-commerce Platform').build();
+  const config = new DocumentBuilder()
+    .setTitle('E-commerce Platform')
+    .addBearerAuth()
+    .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
