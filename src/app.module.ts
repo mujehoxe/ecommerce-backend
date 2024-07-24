@@ -23,11 +23,11 @@ configDotenv();
       ssl: process.env.NODE_ENV === 'production',
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client'),
-    }),
-    ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'admin'),
       serveRoot: '/admin',
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client'),
     }),
     OrderModule,
     ProductModule,
