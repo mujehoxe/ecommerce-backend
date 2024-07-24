@@ -9,6 +9,8 @@ import { UserModule } from './user/user.module';
 import { configDotenv } from 'dotenv';
 import { APP_GUARD } from '@nestjs/core';
 import { DefaultGuard } from './auth/auth.guard.js';
+import { join } from 'node:path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 configDotenv();
 @Module({
@@ -19,6 +21,13 @@ configDotenv();
       autoLoadEntities: true,
       synchronize: true,
       ssl: process.env.NODE_ENV === 'production',
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client'),
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'admin'),
+      serveRoot: '/admin',
     }),
     OrderModule,
     ProductModule,
@@ -34,4 +43,4 @@ configDotenv();
   ],
   controllers: [FileController],
 })
-export class AppModule {}
+export class AppModule { }
